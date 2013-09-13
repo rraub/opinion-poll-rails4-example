@@ -4,10 +4,11 @@ FactoryGirl.define do
   factory :answer do
     name "MyString"
     poll nil
-    votes {
-       Array(1..5).sample.times.map do
-        FactoryGirl.create(:vote) 
-      end
-    }
+    votes []
+    # votes {
+    #    Array(1..5).sample.times.map do
+    #     FactoryGirl.create(:vote) 
+    #   end
+    # }
   end
 end

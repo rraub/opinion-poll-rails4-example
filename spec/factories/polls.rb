@@ -4,10 +4,11 @@ FactoryGirl.define do
   factory :poll do
     question "my question"
     creator "1234"
-    answers {
-      Array(1..5).sample.times.map do
-        FactoryGirl.create(:answer) 
-      end
-    }
+    answers []
+    # answers {
+    #   Array(1..5).sample.times.map do
+    #     create(:answer) 
+    #   end
+    # }
   end
 end

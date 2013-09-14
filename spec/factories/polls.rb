@@ -6,12 +6,14 @@ FactoryGirl.define do
     creator "1234"
     answers []
     
-    factory :poll_with_answers do
-      answers {
-         Array(2..5).sample.times.map do
-           create(:answer) 
-         end
-       }
+    factory :poll_with_answers do 
+      after_build do |poll|
+        answers {
+          Array(2..5).sample.times.map do
+            build(:answer, poll: poll) 
+          end
+        }
+      end
     end
   end
 end

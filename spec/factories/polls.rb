@@ -5,10 +5,13 @@ FactoryGirl.define do
     question "my question"
     creator "1234"
     answers []
-    # answers {
-    #   Array(1..5).sample.times.map do
-    #     create(:answer) 
-    #   end
-    # }
+    
+    factory :poll_with_answers do
+      answers {
+         Array(2..5).sample.times.map do
+           create(:answer) 
+         end
+       }
+    end
   end
 end

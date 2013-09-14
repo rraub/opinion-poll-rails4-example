@@ -3,9 +3,14 @@ class Vote < ActiveRecord::Base
 
   validates :answer, presence: true
 
-  validate :user_has_not_voted_in_poll
+  validate :user_allowed_to_vote
+  # todo, user not empty
 
-  def user_has_not_voted_in_poll
-	self.answer.poll.allowed_to_vote? self.user unless answer.nil?
+  def user_allowed_to_vote
+  	return false if answer.nil? 
+	unless self.answer.poll.allowed_to_vote?(self.user)
+	  errors.add(:user, "Only one vote per user")
+	  return false
+	end
   end
 end

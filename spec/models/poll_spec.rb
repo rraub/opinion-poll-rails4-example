@@ -22,4 +22,16 @@ describe Poll do
     poll.valid?.should be_false
   end
 
+  it "only allows one vote per user" do
+    poll = build(:poll)
+    poll.answers = 5.times.map do build(:answer, poll: poll) end 
+    poll.save.should be_true
+
+    vote_one = build(:vote, user: 'bob', answer: poll.answers.first)
+    vote_one.save.should be_true
+
+    vote_two = build(:vote, user: 'bob', answer: poll.answers.last)
+    vote_two.valid?.should be_false
+  end
+
 end

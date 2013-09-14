@@ -20,6 +20,6 @@ class Poll < ActiveRecord::Base
   end
 
   def allowed_to_vote?(user)
-	true
+  	Vote.joins(:answer).where('answers.poll_id' => self.id, user: user).count == 0
   end
 end

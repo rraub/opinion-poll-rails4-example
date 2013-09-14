@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :vote do
-    user "MyString"
+    user { |n| "user#{n}"}
     answer nil
   end
 end

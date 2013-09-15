@@ -12,8 +12,7 @@ gem 'jbuilder', '~> 1.2'
 gem 'bootstrap-sass'
 gem 'figaro'
 gem 'mysql2'
-# gem 'formtastic'
-gem "formtastic-bootstrap", "~> 2.1.3"
+gem 'formtastic', "~> 2.2.1"
 
 group :development do
   gem 'better_errors'

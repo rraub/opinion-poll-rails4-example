@@ -1,7 +1,7 @@
 class Poll < ActiveRecord::Base
   has_many :answers
   has_many :votes, :through => :answers
-  
+
   validate :has_minium_answers, :has_less_than_or_equal_to_the_maximum_answers
 
   #todo: unique answers

@@ -14,24 +14,30 @@ class PollsController < ApplicationController
 
   # GET /polls/new
   def new
+    #todo: handel errors when creating a new poll
     @poll = Poll.new
-    Poll::MAX_ANSWERS.times do
-      answers = @poll.answers.build
+    (Poll::MAX_ANSWERS - @poll.answers.count).times do
+      @poll.answers.build
     end
   end
 
   # GET /polls/1/edit
   def edit
     unless(@poll.updatable?)
-      flash[:notice] = 'Poll is not able to be updated'
+      flash[:notice] = 'Poll is not updatable'
       redirect_to :index
+    else
+      # if they wish to add more answers, build the remaining placeholders
+      (Poll::MAX_ANSWERS - @poll.answers.count).times do 
+         @poll.answers.build
+       end
     end
+
   end
 
   # POST /polls
   # POST /polls.json
   def create
-    
     @poll = Poll.new(poll_params)
     @poll.answers.each do |a| a.poll_id = @poll.id end
 
@@ -49,6 +55,7 @@ class PollsController < ApplicationController
   # PATCH/PUT /polls/1
   # PATCH/PUT /polls/1.json
   def update
+    @poll.answers.each do |a| a.poll_id = @poll.id end
     respond_to do |format|
       if @poll.update(poll_params)
         format.html { redirect_to @poll, notice: 'Poll was successfully updated.' }
@@ -78,6 +85,6 @@ class PollsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def poll_params
-      params[:poll].permit(:question, answers_attributes: [:name] )
+      params[:poll].permit(:question, answers_attributes: [:name, :id] )
     end
 end

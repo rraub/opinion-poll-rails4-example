@@ -23,16 +23,23 @@ describe PollsController do
   # This should return the minimal set of attributes required to create a valid
   # Poll. As you add validations to Poll, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) { {  } }
+  let(:valid_attributes) { { "poll" => { 
+     "question"=>"adsf", 
+     "answers_attributes"=>{"0"=>{"name"=>"a"}, "1"=>{"name"=>"b"}, "2"=>{"name"=>"c"}, "3"=>{"name"=>""}, "4"=>{"name"=>""}}} } }
+   
+  let(:poll) { FactoryGirl.build(:poll_with_answers) }
+     
+  #, answers_attributes: [name: :somtghin, name: :somthingelse]
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # PollsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
+
   describe "GET index" do
     it "assigns all polls as @polls" do
-      poll = create(:poll_with_answers)
+      poll.save!
       get :index, {}, valid_session
       assigns(:polls).should eq([poll])
     end
@@ -40,7 +47,8 @@ describe PollsController do
 
   describe "GET show" do
     it "assigns the requested poll as @poll" do
-      poll = create(:poll_with_answers)
+      # poll = Poll.create! valid_attributes
+      poll.save!
       get :show, {:id => poll.to_param}, valid_session
       assigns(:poll).should eq(poll)
     end
@@ -55,28 +63,30 @@ describe PollsController do
 
   describe "GET edit" do
     it "assigns the requested poll as @poll" do
-      poll = create(:poll_with_answers)
+      # poll = Poll.create! valid_attributes
+      poll.save!
       get :edit, {:id => poll.to_param}, valid_session
       assigns(:poll).should eq(poll)
     end
   end
 
-  describe "POST create" do
+  describe "POST create"  do
     describe "with valid params" do
       it "creates a new Poll" do
         expect {
-          post :create, {:poll => valid_attributes}, valid_session
+          post :create, valid_attributes, valid_session
         }.to change(Poll, :count).by(1)
       end
 
       it "assigns a newly created poll as @poll" do
-        post :create, {:poll => valid_attributes}, valid_session
+        post :create,  valid_attributes, valid_session
         assigns(:poll).should be_a(Poll)
         assigns(:poll).should be_persisted
       end
 
       it "redirects to the created poll" do
-        post :create, {:poll => valid_attributes}, valid_session
+        # post :create, {:poll => valid_attributes}, valid_session
+        post :create, valid_attributes, valid_session
         response.should redirect_to(Poll.last)
       end
     end
@@ -100,24 +110,24 @@ describe PollsController do
 
   describe "PUT update" do
     describe "with valid params" do
-      it "updates the requested poll" do
-        poll = Poll.create! valid_attributes
+      it "updates the requested poll"do
+        poll.save!
         # Assuming there are no other polls in the database, this
         # specifies that the Poll created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
-        Poll.any_instance.should_receive(:update).with({ "these" => "params" })
-        put :update, {:id => poll.to_param, :poll => { "these" => "params" }}, valid_session
+        Poll.any_instance.should_receive(:update).with({ "question" => "another" })
+        put :update, {:id => poll.to_param, :poll => { "question" => "another"  }}, valid_session
       end
 
       it "assigns the requested poll as @poll" do
-        poll = Poll.create! valid_attributes
+        poll.save!
         put :update, {:id => poll.to_param, :poll => valid_attributes}, valid_session
         assigns(:poll).should eq(poll)
       end
 
       it "redirects to the poll" do
-        poll = Poll.create! valid_attributes
+        poll.save!
         put :update, {:id => poll.to_param, :poll => valid_attributes}, valid_session
         response.should redirect_to(poll)
       end
@@ -125,7 +135,7 @@ describe PollsController do
 
     describe "with invalid params" do
       it "assigns the poll as @poll" do
-        poll = Poll.create! valid_attributes
+        poll.save!
         # Trigger the behavior that occurs when invalid params are submitted
         Poll.any_instance.stub(:save).and_return(false)
         put :update, {:id => poll.to_param, :poll => {  }}, valid_session
@@ -133,7 +143,7 @@ describe PollsController do
       end
 
       it "re-renders the 'edit' template" do
-        poll = Poll.create! valid_attributes
+        poll.save! 
         # Trigger the behavior that occurs when invalid params are submitted
         Poll.any_instance.stub(:save).and_return(false)
         put :update, {:id => poll.to_param, :poll => {  }}, valid_session
@@ -142,16 +152,16 @@ describe PollsController do
     end
   end
 
-  describe "DELETE destroy" do
+  describe "DELETE destroy"do
     it "destroys the requested poll" do
-      poll = Poll.create! valid_attributes
+      poll.save! 
       expect {
         delete :destroy, {:id => poll.to_param}, valid_session
       }.to change(Poll, :count).by(-1)
     end
 
-    it "redirects to the polls list" do
-      poll = Poll.create! valid_attributes
+    it "redirects to the polls list"  do
+      poll.save! 
       delete :destroy, {:id => poll.to_param}, valid_session
       response.should redirect_to(polls_url)
     end

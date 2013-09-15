@@ -7,13 +7,11 @@ FactoryGirl.define do
     answers []
     
     factory :poll_with_answers do 
-      after_build do |poll|
-        answers {
+       after(:build) do |poll|
           Array(2..5).sample.times.map do
-            build(:answer, poll: poll) 
+            poll.answers << build(:answer, poll: poll) 
           end
-        }
-      end
+       end
     end
   end
 end

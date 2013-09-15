@@ -2,11 +2,12 @@ class Poll < ActiveRecord::Base
   has_many :answers
   has_many :votes, :through => :answers
 
-  accepts_nested_attributes_for :answers, :reject_if => lambda { |a| a[:name].blank? }
+  accepts_nested_attributes_for :answers, :reject_if => lambda { |a| a[:name].blank? }, allow_destroy: true
 
   validate :has_minium_answers, :has_less_than_or_equal_to_the_maximum_answers, :updatable?
 
   #todo: unique answers
+  #todo: add a question mark if there isn't one in the question
 
   MIN_ANSWERS = 2
   MAX_ANSWERS = 5

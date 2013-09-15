@@ -1,3 +1,5 @@
 OpinionPoll::Application.routes.draw do
-  root :to => "home#index"
+  root :to => "polls#index"
+
+  resources :polls
 end

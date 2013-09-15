@@ -4,6 +4,8 @@ class Poll < ActiveRecord::Base
   
   validate :has_minium_answers, :has_less_than_or_equal_to_the_maximum_answers
 
+  #todo: unique answers
+
   MIN_ANSWERS = 2
   MAX_ANSWERS = 5
 

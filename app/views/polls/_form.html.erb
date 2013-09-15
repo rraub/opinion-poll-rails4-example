@@ -11,8 +11,11 @@
     </div>
   <% end %>
 
-  <%= f.inputs do %>
-    <%= f.input :question %>
+<%= f.input :question %>
+  <%= f.semantic_fields_for :answers do |answer| %>
+    
+      <%= answer.input :name %>
+    
   <% end %>  
   <%= f.submit %>
 <% end %>

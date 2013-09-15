@@ -15,16 +15,25 @@ class PollsController < ApplicationController
   # GET /polls/new
   def new
     @poll = Poll.new
+    Poll::MAX_ANSWERS.times do
+      answers = @poll.answers.build
+    end
   end
 
   # GET /polls/1/edit
   def edit
+    unless(@poll.updatable?)
+      flash[:notice] = 'Poll is not able to be updated'
+      redirect_to :index
+    end
   end
 
   # POST /polls
   # POST /polls.json
   def create
-    @poll = Poll.new(poll_params.permit(:question))
+    
+    @poll = Poll.new(poll_params)
+    @poll.answers.each do |a| a.poll_id = @poll.id end
 
     respond_to do |format|
       if @poll.save
@@ -69,6 +78,6 @@ class PollsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def poll_params
-      params[:poll]
+      params[:poll].permit(:question, answers_attributes: [:name] )
     end
 end

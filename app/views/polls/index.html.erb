@@ -12,7 +12,7 @@
   <tbody>
     <% @polls.each do |poll| %>
       <tr>
-        <td><%= link_to 'Show', poll %></td>
+        <td><%= link_to poll.question, poll %></td>
         <td><%= link_to 'Edit', edit_poll_path(poll) %></td>
         <td><%= link_to 'Destroy', poll, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
@@ -22,4 +22,4 @@
 
 <br>
 
-<%= link_to 'New Poll', new_poll_path %>
+<%= link_to 'Create a new Poll', new_poll_path %>

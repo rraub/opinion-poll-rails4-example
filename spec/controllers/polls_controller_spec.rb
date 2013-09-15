@@ -32,7 +32,7 @@ describe PollsController do
 
   describe "GET index" do
     it "assigns all polls as @polls" do
-      poll = Poll.create! valid_attributes
+      poll = create(:poll_with_answers)
       get :index, {}, valid_session
       assigns(:polls).should eq([poll])
     end
@@ -40,7 +40,7 @@ describe PollsController do
 
   describe "GET show" do
     it "assigns the requested poll as @poll" do
-      poll = Poll.create! valid_attributes
+      poll = create(:poll_with_answers)
       get :show, {:id => poll.to_param}, valid_session
       assigns(:poll).should eq(poll)
     end
@@ -55,7 +55,7 @@ describe PollsController do
 
   describe "GET edit" do
     it "assigns the requested poll as @poll" do
-      poll = Poll.create! valid_attributes
+      poll = create(:poll_with_answers)
       get :edit, {:id => poll.to_param}, valid_session
       assigns(:poll).should eq(poll)
     end

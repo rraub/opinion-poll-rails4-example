@@ -12,10 +12,9 @@
   <% end %>
 
 <%= f.input :question %>
-  <%= f.semantic_fields_for :answers do |answer| %>
-    
-      <%= answer.input :name %>
-    
+  <%= f.semantic_fields_for :answers do |a| %>
+      <%# a.input :id, as: :hidden %>
+      <%= a.input :name %>
   <% end %>  
   <%= f.submit %>
 <% end %>

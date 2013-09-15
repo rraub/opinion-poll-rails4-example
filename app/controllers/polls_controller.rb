@@ -39,13 +39,16 @@ class PollsController < ApplicationController
   # POST /polls.json
   def create
     @poll = Poll.new(poll_params)
-    @poll.answers.each do |a| a.poll_id = @poll.id end
+    @poll.answers.each do |a| a.poll_id = @poll.id end 
 
     respond_to do |format|
       if @poll.save
         format.html { redirect_to @poll, notice: 'Poll was successfully created.' }
         format.json { render action: 'show', status: :created, location: @poll }
       else
+        (Poll::MAX_ANSWERS - @poll.answers.count).times do 
+          @poll.answers.build
+        end
         format.html { render action: 'new' }
         format.json { render json: @poll.errors, status: :unprocessable_entity }
       end
@@ -61,6 +64,9 @@ class PollsController < ApplicationController
         format.html { redirect_to @poll, notice: 'Poll was successfully updated.' }
         format.json { head :no_content }
       else
+        (Poll::MAX_ANSWERS - @poll.answers.count).times do 
+          @poll.answers.build
+        end
         format.html { render action: 'edit' }
         format.json { render json: @poll.errors, status: :unprocessable_entity }
       end

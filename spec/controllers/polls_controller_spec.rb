@@ -68,6 +68,13 @@ describe PollsController do
       get :edit, {:id => poll.to_param}, valid_session
       assigns(:poll).should eq(poll)
     end
+
+    it "always has additional answers built" do
+        poll.save!
+        get :edit, {:id => poll.to_param}, valid_session
+        # there should always be Poll::MAX_ANSWERS number of answers
+        assigns(:poll).answers.to_a.count.should eq(Poll::MAX_ANSWERS)
+      end
   end
 
   describe "POST create"  do
@@ -104,6 +111,13 @@ describe PollsController do
         Poll.any_instance.stub(:save).and_return(false)
         post :create, {:poll => {  }}, valid_session
         response.should render_template("new")
+      end
+
+      it "always has additional answers built" do
+        Poll.any_instance.stub(:save).and_return(false)
+        post :create, {:poll => {  }}, valid_session
+        # there should always be Poll::MAX_ANSWERS number of answers
+        assigns(:poll).answers.to_a.count.should eq(Poll::MAX_ANSWERS)
       end
     end
   end

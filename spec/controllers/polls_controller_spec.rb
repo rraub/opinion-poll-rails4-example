@@ -47,10 +47,22 @@ describe PollsController do
 
   describe "GET show" do
     it "assigns the requested poll as @poll" do
-      # poll = Poll.create! valid_attributes
       poll.save!
       get :show, {:id => poll.to_param}, valid_session
       assigns(:poll).should eq(poll)
+    end
+    it "renders the voting template if has not been voted on", focus: true do
+      poll.save!
+      get :show, {:id => poll.to_param}, valid_session
+      response.should render_template("show")
+    end
+
+    it "renders the results template if its already been voted on", focus: true do
+      poll.save!
+      controller.stub(:current_user).and_return("1234")
+      FactoryGirl.create(:vote, :answer => poll.answers.first, :user => "1234")
+      get :show, {:id => poll.to_param}, valid_session
+      response.should render_template("show_results")
     end
   end
 
@@ -63,7 +75,6 @@ describe PollsController do
 
   describe "GET edit" do
     it "assigns the requested poll as @poll" do
-      # poll = Poll.create! valid_attributes
       poll.save!
       get :edit, {:id => poll.to_param}, valid_session
       assigns(:poll).should eq(poll)

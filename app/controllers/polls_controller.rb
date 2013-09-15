@@ -10,6 +10,9 @@ class PollsController < ApplicationController
   # GET /polls/1
   # GET /polls/1.json
   def show
+    unless(@poll.has_been_voted_on_by current_user)
+      render action: 'show_results' 
+    end
   end
 
   # GET /polls/new

@@ -1,0 +1,9 @@
+
+<h2><%= @poll.question %></h2>
+	<ul>
+	<% @poll.answers.each do |answer| %>
+	  <li><%= answer.name %> - <%= answer.votes.count %></li>
+	<% end %>
+
+
+<%= link_to 'Back', polls_path %>

@@ -2,7 +2,7 @@
 <h2><%= @poll.question %></h2>
 <ul>
 <% @poll.answers.each do |answer| %>
-  <li><%= answer.name %></li>
+  <li><%= link_to answer.name, cast_vote_path(answer.id) %></li>
 <% end %>
 
 <%= link_to 'Edit', edit_poll_path(@poll) if @poll.updatable? %> |

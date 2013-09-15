@@ -34,4 +34,14 @@ describe Poll do
     vote_two.valid?.should be_false
   end
 
+
+  it "is only updatable if it has no votes" do
+    poll = build(:poll)
+    poll.answers = 5.times.map do build(:answer, poll: poll) end 
+    poll.save.should be_true
+    poll.updatable?.should be_true
+    create(:vote, answer: poll.answers.first)
+    poll.updatable?.should be_false
+
+  end
 end

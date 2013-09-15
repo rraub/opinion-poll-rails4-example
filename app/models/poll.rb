@@ -2,7 +2,9 @@ class Poll < ActiveRecord::Base
   has_many :answers
   has_many :votes, :through => :answers
 
-  validate :has_minium_answers, :has_less_than_or_equal_to_the_maximum_answers
+  accepts_nested_attributes_for :answers, :reject_if => lambda { |a| a[:name].blank? }
+
+  validate :has_minium_answers, :has_less_than_or_equal_to_the_maximum_answers, :updatable?
 
   #todo: unique answers
 
@@ -23,5 +25,9 @@ class Poll < ActiveRecord::Base
 
   def allowed_to_vote?(user)
   	Vote.joins(:answer).where('answers.poll_id' => self.id, user: user).count == 0
+  end
+
+  def updatable?
+  	Vote.joins(:answer).where('answers.poll_id' => self.id).count == 0
   end
 end

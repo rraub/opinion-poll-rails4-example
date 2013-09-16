@@ -32,37 +32,25 @@ class PollsController < ApplicationController
   def new
     #todo: handel errors when creating a new poll
     @poll = Poll.new
-    (Poll::MAX_ANSWERS - @poll.answers.to_a.count).times do
-      @poll.answers.build
-    end
   end
 
   # GET /polls/1/edit
   def edit
     unless(@poll.updatable_by?(current_user))
       redirect_to @poll, notice: 'Poll is not updatable'
-    else
-      # if they wish to add more answers, build the remaining placeholders
-      (Poll::MAX_ANSWERS - @poll.answers.to_a.count).times do 
-         @poll.answers.build
-       end
     end
-
   end
 
   # POST /polls
   def create
     @poll = Poll.new(poll_params)
     @poll.creator = current_user
-    @poll.answers.each do |a| a.poll_id = @poll.id end 
+    # @poll.answers.each do |a| a.poll_id = @poll.id end 
 
     respond_to do |format|
       if @poll.save
         format.html { redirect_to @poll, notice: 'Poll was successfully created.' }
       else
-        (Poll::MAX_ANSWERS - @poll.answers.to_a.count).times do 
-          @poll.answers.build
-        end
         format.html { render action: 'new' }
       end
     end
@@ -70,14 +58,11 @@ class PollsController < ApplicationController
 
   # PATCH/PUT /polls/1
   def update
-    @poll.answers.each do |a| a.poll_id = @poll.id end
+    # @poll.answers.each do |a| a.poll_id = @poll.id end
     respond_to do |format|
       if @poll.update(poll_params)
         format.html { redirect_to @poll, notice: 'Poll was successfully updated.' }
       else
-        (Poll::MAX_ANSWERS - @poll.answers.to_a.count).times do 
-          @poll.answers.build
-        end
         format.html { render action: 'edit' }
       end
     end

@@ -1,10 +1,18 @@
 class Poll < ActiveRecord::Base
   has_many :answers
-  has_many :votes, :through => :answers
+  has_many :votes, through: :answers
 
-  accepts_nested_attributes_for :answers, :reject_if => lambda { |a| a[:name].blank? }, allow_destroy: true
+  accepts_nested_attributes_for :answers, reject_if: proc { |a| a[:name].blank? }, allow_destroy: true
 
   validate :has_minium_answers, :has_less_than_or_equal_to_the_maximum_answers, :updatable?
+
+  after_initialize :build_answers
+
+  def build_answers
+    (Poll::MAX_ANSWERS - self.answers.to_a.count).times do
+      self.answers.build
+    end
+  end
 
   #todo: unique answers
   #todo: add a question mark if there isn't one in the question

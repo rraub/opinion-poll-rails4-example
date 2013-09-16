@@ -1,6 +1,6 @@
 class Answer < ActiveRecord::Base
-  belongs_to :poll, :dependent => :destroy
+  belongs_to :poll, dependent: :destroy  #, inverse_of: :answers
   has_many :votes
   
-  # validates :poll, presence: true
+  # validates_presence_of :poll
 end

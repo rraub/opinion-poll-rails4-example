@@ -44,11 +44,25 @@ describe Poll do
     poll.updatable?.should be_false
   end
 
-  it "can tell if you've voted before", focus: true  do
+  it "can tell if you've voted before" do
     poll = build(:poll_with_answers)
     poll.save!
     poll.has_been_voted_on_by('test').should be_false
     vote = create(:vote, answer_id: poll.answers.first.id, :user => 'test' )
     poll.has_been_voted_on_by('test').should be_true
+  end
+
+  describe "ensures a question mark at the end of your question", focus: true do
+    it "adds one if it needs to" do
+      poll = build(:poll_with_answers, question: 'no question mark')
+      poll.save!
+      poll.question.should eq('no question mark?')
+    end
+
+    it "doesn't add a question mark if there is one" do
+      poll = build(:poll_with_answers, question: 'no question mark?')
+      poll.save!
+      poll.question.should eq('no question mark?')
+    end
   end
 end

@@ -6,11 +6,22 @@ class Poll < ActiveRecord::Base
 
   validate :has_minium_answers, :has_less_than_or_equal_to_the_maximum_answers, :updatable?
 
+  before_validation :ensure_question_punctuation
+
   MIN_ANSWERS = 2
   MAX_ANSWERS = 5
 
   #todo: unique answers
-  #todo: add a question mark if there isn't one in the question
+  
+  def ensure_question_punctuation
+    unless(self.question.blank?)
+      self.question = self.question.strip
+      unless(self.question.ends_with?('?'))
+        self.question << "?"
+      end
+    end
+    true
+  end
 
   def build_placeholder_answers
     (Poll::MAX_ANSWERS - self.answers.to_a.count).times do

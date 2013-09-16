@@ -63,19 +63,23 @@ class PollsController < ApplicationController
 
   # PATCH/PUT /polls/1
   def update
-    respond_to do |format|
-      if @poll.update(poll_params)
-        format.html { redirect_to @poll, notice: 'Poll was successfully updated.' }
-      else
-        @poll.build_placeholder_answers
-        format.html { render action: 'edit' }
+    if(@poll.updatable_by?(current_user))
+      respond_to do |format|
+        if @poll.update(poll_params)
+          format.html { redirect_to @poll, notice: 'Poll was successfully updated.' }
+        else
+          @poll.build_placeholder_answers
+          format.html { render action: 'edit' }
+        end
       end
+    else
+      redirect_to @poll, notice: 'Invalid Request'
     end
   end
 
   # DELETE /polls/1
   def destroy
-    if(@poll.updatable_by?(current_user))
+    if(@poll.creator  == current_user)
       @poll.destroy
       redirect_to polls_url
     else

@@ -187,11 +187,13 @@ describe PollsController do
   describe "PUT update" do
     describe "with valid params" do
       it "updates the requested poll"do
+        poll.creator = "1234"
         poll.save!
         # Assuming there are no other polls in the database, this
         # specifies that the Poll created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
+        controller.stub(:current_user).and_return("1234")
         Poll.any_instance.should_receive(:update).with({ "question" => "another" })
         put :update, {:id => poll.to_param, :poll => { "question" => "another"  }}, valid_session
       end
@@ -211,6 +213,15 @@ describe PollsController do
         put :update, {:id => poll.to_param, :poll => valid_attributes}, valid_session
         response.should redirect_to(poll)
       end
+
+      it "prevents other users from editing the poll" do
+        poll.creator = "someone-else"
+        poll.question = "original value"
+        poll.save!
+        controller.stub(:current_user).and_return("1234")
+        put :update, {:id => poll.to_param, :poll => valid_attributes}, valid_session
+        assigns(:poll).question.should eq(poll.question)
+      end
     end
 
     describe "with invalid params" do
@@ -223,7 +234,9 @@ describe PollsController do
       end
 
       it "re-renders the 'edit' template" do
-        poll.save! 
+        poll.creator = "1234"
+        poll.save!
+        controller.stub(:current_user).and_return("1234")
         # Trigger the behavior that occurs when invalid params are submitted
         Poll.any_instance.stub(:save).and_return(false)
         put :update, {:id => poll.to_param, :poll => {  }}, valid_session

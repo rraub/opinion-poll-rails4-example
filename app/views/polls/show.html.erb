@@ -1,5 +1,6 @@
 
 <h2><%= @poll.question %></h2>
+<p>Cast your vote by clicking on the answer below:</p>
 <ul>
 <% @poll.answers.each do |answer| %>
   <li><%= link_to answer.name, vote_on_poll_path(answer.id) %></li>

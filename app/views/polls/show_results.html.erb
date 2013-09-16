@@ -1,9 +1,9 @@
 <h2><%= @poll.question %></h2>
+<p>here are the results of <%= pluralize @poll.votes.count, 'vote' %> </p>
   <ul>
 	<% @poll.answers.each do |answer| %>
-	  <li><%= answer.name %> - <%= answer.votes.count %></li>
+	  <li><%= answer.name %>: <%= answer.votes.count %></li>
 	<% end %>
   </ul> 
-  <p>total: <%= pluralize @poll.votes.count, 'vote' %></p>
 
 <%= link_to 'Back', polls_path %>

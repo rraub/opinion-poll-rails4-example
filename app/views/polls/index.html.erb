@@ -1,13 +1,10 @@
-
-    <% @polls.each do |poll| %>
-
-        <h3>
-          <% if poll.has_been_voted_on_by(current_user) %>&#x2713;<% end %>
-          <%= link_to poll.question, poll %>
-        </h3>
-        
-    <% end %>
-
+<h1>Polls to vote in</h1>
+<% @polls.each do |poll| %>
+    <h3>
+      <% if poll.has_been_voted_on_by(current_user) %>&#x2713;<% end %>
+      <%= link_to poll.question, poll %>
+    </h3>
+<% end %>
+    
 <br>
-
 <%= link_to 'Create a new Poll', new_poll_path %>

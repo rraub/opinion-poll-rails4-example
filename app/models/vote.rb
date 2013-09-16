@@ -8,9 +8,9 @@ class Vote < ActiveRecord::Base
 
   def user_allowed_to_vote
   	return false if answer.nil? 
-	unless self.answer.poll.allowed_to_vote?(self.user)
-	  errors.add(:user, "Only one vote per user")
-	  return false
-	end
+	  unless self.answer.poll.allowed_to_vote?(self.user)
+	    errors.add(:user, "Only one vote per user")
+	    return false
+	  end
   end
 end

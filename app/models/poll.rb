@@ -29,7 +29,11 @@ class Poll < ActiveRecord::Base
   end
 
   def updatable?
-  	Vote.joins(:answer).where('answers.poll_id' => self.id).count == 0
+    Vote.joins(:answer).where('answers.poll_id' => self.id).count == 0
+  end
+
+  def updatable_by?(user)
+    self.creator == user and self.updatable?
   end
 
   def has_been_voted_on_by(user)

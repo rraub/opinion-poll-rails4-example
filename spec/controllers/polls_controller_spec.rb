@@ -74,7 +74,9 @@ describe PollsController do
 
   describe "GET edit" do
     it "assigns the requested poll as @poll" do
+      poll.creator = "1234"
       poll.save!
+      controller.stub(:current_user).and_return("1234")
       get :edit, {:id => poll.to_param}, valid_session
       assigns(:poll).should eq(poll)
     end
@@ -138,6 +140,10 @@ describe PollsController do
         get :vote, {answer_id: poll.answers.first.id}, use_route: vote_on_poll_path(answer_id: poll.answers.first.id)
         response.should redirect_to(poll)
       end
+
+      pending 'increases the vote count by one' do
+        # todo
+      end
     end
 
     describe "with an invalid answer" do
@@ -168,13 +174,17 @@ describe PollsController do
       end
 
       it "assigns the requested poll as @poll" do
+        poll.creator = "1234"
         poll.save!
+        controller.stub(:current_user).and_return("1234")
         put :update, {:id => poll.to_param, :poll => valid_attributes}, valid_session
         assigns(:poll).should eq(poll)
       end
 
       it "redirects to the poll" do
+        poll.creator = "1234"
         poll.save!
+        controller.stub(:current_user).and_return("1234")
         put :update, {:id => poll.to_param, :poll => valid_attributes}, valid_session
         response.should redirect_to(poll)
       end
@@ -201,14 +211,18 @@ describe PollsController do
 
   describe "DELETE destroy"do
     it "destroys the requested poll" do
-      poll.save! 
+      poll.creator = "1234"
+      poll.save!
+      controller.stub(:current_user).and_return("1234")
       expect {
         delete :destroy, {:id => poll.to_param}, valid_session
       }.to change(Poll, :count).by(-1)
     end
 
     it "redirects to the polls list"  do
-      poll.save! 
+      poll.creator = "1234"
+      poll.save!
+      controller.stub(:current_user).and_return("1234")
       delete :destroy, {:id => poll.to_param}, valid_session
       response.should redirect_to(polls_url)
     end

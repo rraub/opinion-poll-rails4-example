@@ -38,7 +38,7 @@ class PollsController < ApplicationController
 
   # GET /polls/1/edit
   def edit
-    unless(@poll.updatable?)
+    unless(@poll.updatable_by?(current_user))
       redirect_to @poll, notice: 'Poll is not updatable'
     else
       # if they wish to add more answers, build the remaining placeholders
@@ -52,6 +52,7 @@ class PollsController < ApplicationController
   # POST /polls
   def create
     @poll = Poll.new(poll_params)
+    @poll.creator = current_user
     @poll.answers.each do |a| a.poll_id = @poll.id end 
 
     respond_to do |format|
@@ -83,9 +84,11 @@ class PollsController < ApplicationController
 
   # DELETE /polls/1
   def destroy
-    @poll.destroy
-    respond_to do |format|
-      format.html { redirect_to polls_url }
+    if(@poll.updatable_by?(current_user))
+      @poll.destroy
+      redirect_to polls_url
+    else
+      redirect_to polls_url, notice: 'invalid request'
     end
   end
 

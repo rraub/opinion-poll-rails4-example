@@ -5,5 +5,8 @@
   <li><%= link_to answer.name, vote_on_poll_path(answer.id) %></li>
 <% end %>
 
-<%= link_to 'Edit', edit_poll_path(@poll) if @poll.updatable? %> |
+<% if @poll.updateable_by?(current_user) %>
+	<%= link_to 'Edit', edit_poll_path(@poll) %> |
+	<%= link_to 'Destroy', @poll, method: :delete, data: { confirm: 'Are you sure?' } %> | 
+<% end %>
 <%= link_to 'Back', polls_path %>

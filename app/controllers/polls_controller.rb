@@ -30,14 +30,16 @@ class PollsController < ApplicationController
 
   # GET /polls/new
   def new
-    #todo: handel errors when creating a new poll
     @poll = Poll.new
+    @poll.build_placeholder_answers
   end
 
   # GET /polls/1/edit
   def edit
     unless(@poll.updatable_by?(current_user))
       redirect_to @poll, notice: 'Poll is not updatable'
+    else
+      @poll.build_placeholder_answers
     end
   end
 
@@ -45,12 +47,12 @@ class PollsController < ApplicationController
   def create
     @poll = Poll.new(poll_params)
     @poll.creator = current_user
-    # @poll.answers.each do |a| a.poll_id = @poll.id end 
 
     respond_to do |format|
       if @poll.save
         format.html { redirect_to @poll, notice: 'Poll was successfully created.' }
       else
+        @poll.build_placeholder_answers
         format.html { render action: 'new' }
       end
     end
@@ -58,11 +60,11 @@ class PollsController < ApplicationController
 
   # PATCH/PUT /polls/1
   def update
-    # @poll.answers.each do |a| a.poll_id = @poll.id end
     respond_to do |format|
       if @poll.update(poll_params)
         format.html { redirect_to @poll, notice: 'Poll was successfully updated.' }
       else
+        @poll.build_placeholder_answers
         format.html { render action: 'edit' }
       end
     end

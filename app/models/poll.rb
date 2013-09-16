@@ -6,19 +6,17 @@ class Poll < ActiveRecord::Base
 
   validate :has_minium_answers, :has_less_than_or_equal_to_the_maximum_answers, :updatable?
 
-  after_initialize :build_answers
-
-  def build_answers
-    (Poll::MAX_ANSWERS - self.answers.to_a.count).times do
-      self.answers.build
-    end
-  end
+  MIN_ANSWERS = 2
+  MAX_ANSWERS = 5
 
   #todo: unique answers
   #todo: add a question mark if there isn't one in the question
 
-  MIN_ANSWERS = 2
-  MAX_ANSWERS = 5
+  def build_placeholder_answers
+    (Poll::MAX_ANSWERS - self.answers.to_a.count).times do
+      self.answers.build
+    end
+  end
 
   def has_minium_answers
   	if answers.nil? or answers.length < MIN_ANSWERS
@@ -28,8 +26,8 @@ class Poll < ActiveRecord::Base
 
   def has_less_than_or_equal_to_the_maximum_answers
   	if answers.present? and answers.length > MAX_ANSWERS
-	  errors.add(:answers, "too many") 
-	end
+  	  errors.add(:answers, "too many") 
+  	end
   end
 
   def allowed_to_vote?(user)

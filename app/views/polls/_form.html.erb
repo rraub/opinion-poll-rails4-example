@@ -13,8 +13,7 @@
 
 <%= f.input :question %>
   <%= f.semantic_fields_for :answers do |a| %>
-      <%# a.input :id, as: :hidden %>
-      <%= a.input :name %>
+      <%= a.input :name, :label => 'Answer' %>
   <% end %>  
   <%= f.submit %>
 <% end %>

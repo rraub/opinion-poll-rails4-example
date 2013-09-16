@@ -11,11 +11,12 @@ class PollsController < ApplicationController
     # params[:answer_id]
     answer = Answer.where(id: params[:answer_id]).first
     if(!answer.nil? and !answer.poll.has_been_voted_on_by(current_user))
-      if(Vote.new(answer_id: answer.id, user: current_user).save!)
-        redirect_to answer.poll #action: :show, id: answer.poll
+      vote = Vote.new(answer_id: answer.id, user: current_user)
+      if(vote.save!)
+        redirect_to answer.poll
       end
     else
-      redirect_to polls_url, notice: 'Invalid Request'
+      redirect_to polls_url, notice: 'Invalid Vote Request'
     end
   end
 

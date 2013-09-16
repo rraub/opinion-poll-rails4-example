@@ -32,7 +32,7 @@ class PollsController < ApplicationController
   def new
     #todo: handel errors when creating a new poll
     @poll = Poll.new
-    (Poll::MAX_ANSWERS - @poll.answers.count).times do
+    (Poll::MAX_ANSWERS - @poll.answers.to_a.count).times do
       @poll.answers.build
     end
   end
@@ -43,7 +43,7 @@ class PollsController < ApplicationController
       redirect_to @poll, notice: 'Poll is not updatable'
     else
       # if they wish to add more answers, build the remaining placeholders
-      (Poll::MAX_ANSWERS - @poll.answers.count).times do 
+      (Poll::MAX_ANSWERS - @poll.answers.to_a.count).times do 
          @poll.answers.build
        end
     end
@@ -60,7 +60,7 @@ class PollsController < ApplicationController
       if @poll.save
         format.html { redirect_to @poll, notice: 'Poll was successfully created.' }
       else
-        (Poll::MAX_ANSWERS - @poll.answers.count).times do 
+        (Poll::MAX_ANSWERS - @poll.answers.to_a.count).times do 
           @poll.answers.build
         end
         format.html { render action: 'new' }
@@ -75,7 +75,7 @@ class PollsController < ApplicationController
       if @poll.update(poll_params)
         format.html { redirect_to @poll, notice: 'Poll was successfully updated.' }
       else
-        (Poll::MAX_ANSWERS - @poll.answers.count).times do 
+        (Poll::MAX_ANSWERS - @poll.answers.to_a.count).times do 
           @poll.answers.build
         end
         format.html { render action: 'edit' }

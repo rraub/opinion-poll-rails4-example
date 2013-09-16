@@ -126,9 +126,16 @@ describe PollsController do
         response.should render_template("new")
       end
 
-      it "always has additional answers built" do
+      it "has additional answers built when none provided" do
         Poll.any_instance.stub(:save).and_return(false)
         post :create, {:poll => {  }}, valid_session
+        # there should always be Poll::MAX_ANSWERS number of answers
+        assigns(:poll).answers.to_a.count.should eq(Poll::MAX_ANSWERS)
+      end
+
+      it "always has additional answers built when one answer is provided", :focus => true do
+        Poll.any_instance.stub(:save).and_return(false)
+        post :create, { "poll" => { "question"=>"question1", "answers_attributes"=>{"0"=>{"name"=>"a"}, "1"=>{"name"=>""}, "2"=>{"name"=>""}, "3"=>{"name"=>""}, "4"=>{"name"=>""}}} }, valid_session
         # there should always be Poll::MAX_ANSWERS number of answers
         assigns(:poll).answers.to_a.count.should eq(Poll::MAX_ANSWERS)
       end

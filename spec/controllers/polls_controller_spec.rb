@@ -82,11 +82,13 @@ describe PollsController do
     end
 
     it "always has additional answers built" do
-        poll.save!
-        get :edit, {:id => poll.to_param}, valid_session
-        # there should always be Poll::MAX_ANSWERS number of answers
-        assigns(:poll).answers.to_a.count.should eq(Poll::MAX_ANSWERS)
-      end
+      poll.creator = "1234"
+      poll.save!
+      controller.stub(:current_user).and_return("1234")
+      get :edit, {:id => poll.to_param}, valid_session
+      # there should always be Poll::MAX_ANSWERS number of answers
+      assigns(:poll).answers.to_a.count.should eq(Poll::MAX_ANSWERS)
+    end
   end
 
   describe "POST create"  do
@@ -141,8 +143,11 @@ describe PollsController do
         response.should redirect_to(poll)
       end
 
-      pending 'increases the vote count by one' do
-        # todo
+      it 'increases the vote count by one' do
+        poll.save!
+        expect {
+          get :vote, {answer_id: poll.answers.first.id}, use_route: vote_on_poll_path(answer_id: poll.answers.first.id)
+        }.to change(Vote, :count).by(1)
       end
     end
 
@@ -158,6 +163,12 @@ describe PollsController do
         response.should redirect_to(polls_url)
       end
 
+      it 'does not change the vote count' do
+        poll.save!
+        expect {
+          get :vote, {answer_id: '123232'}, use_route: vote_on_poll_path(answer_id: '123232')
+        }.to change(Vote, :count).by(0)
+      end
     end
   end
 

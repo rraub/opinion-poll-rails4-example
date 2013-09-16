@@ -1,4 +1,4 @@
-<%= semantic_form_for @poll do |f| %>
+<%= form_for @poll do |f| %>
   <% if @poll.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@poll.errors.count, "error") %> prohibited this poll from being saved:</h2>
@@ -10,10 +10,17 @@
       </ul>
     </div>
   <% end %>
-
-<%= f.input :question %>
-  <%= f.semantic_fields_for :answers do |a| %>
-      <%= a.input :name, :label => 'Answer' %>
+  <div>
+    <label>Question</label>
+    <%= f.text_field :question, class: 'question' %>
+  </div>
+  
+  <ul>
+  <%= f.fields_for :answers do |a| %>
+    <li> 
+      <%= a.text_field :name, label: 'Answer' %><br/>
+    </li>
   <% end %>  
+</ul>
   <%= f.submit %>
-<% end %>
+<% end %>  

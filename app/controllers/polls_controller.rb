@@ -4,6 +4,9 @@ class PollsController < ApplicationController
   # GET /polls
   def index
     @polls = Poll.all
+    if(@polls.empty?)
+      render action: 'index_no_polls'
+    end      
   end
 
   # GET /vote/1

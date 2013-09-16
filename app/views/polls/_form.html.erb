@@ -12,15 +12,17 @@
   <% end %>
   <div>
     <label>Question</label>
-    <%= f.text_field :question, class: 'question' %>
+    <%= f.text_field :question, class: 'question' %>?
   </div>
-  
-  <ul>
-  <%= f.fields_for :answers do |a| %>
-    <li> 
-      <%= a.text_field :name, label: 'Answer' %><br/>
-    </li>
-  <% end %>  
-</ul>
+  <div>
+    <label>Answers</label>
+    <ul>
+    <%= f.fields_for :answers do |a| %>
+      <li> 
+        <%= a.text_field :name, label: 'Answer' %><br/>
+      </li>
+    <% end %>  
+    </ul>
+  </div>
   <%= f.submit %>
 <% end %>  

@@ -41,6 +41,11 @@ describe PollsController do
       get :index, {}, valid_session
       assigns(:polls).should eq([poll])
     end
+
+    it "displays the no polls index when there are no polls" do
+      get :index, {}, valid_session
+      response.should render_template("index_no_polls")
+    end
   end
 
   describe "GET show" do

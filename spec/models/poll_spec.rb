@@ -42,6 +42,13 @@ describe Poll do
     poll.updatable?.should be_true
     create(:vote, answer: poll.answers.first)
     poll.updatable?.should be_false
+  end
 
+  it "can tell if you've voted before", focus: true  do
+    poll = build(:poll_with_answers)
+    poll.save!
+    poll.has_been_voted_on_by('test').should be_false
+    vote = create(:vote, answer_id: poll.answers.first.id, :user => 'test' )
+    poll.has_been_voted_on_by('test').should be_true
   end
 end

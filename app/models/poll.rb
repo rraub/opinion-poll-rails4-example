@@ -33,6 +33,6 @@ class Poll < ActiveRecord::Base
   end
 
   def has_been_voted_on_by(user)
-    allowed_to_vote?(user)
+    !allowed_to_vote?(user)
   end
 end

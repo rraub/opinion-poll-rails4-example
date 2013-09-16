@@ -31,5 +31,9 @@ describe PollsController do
       delete("/polls/1").should route_to("polls#destroy", :id => "1")
     end
 
+    it "routes to #vote" do
+      get("/vote/1").should route_to("polls#vote", :answer_id => "1")
+    end
+
   end
 end

@@ -7,6 +7,19 @@ class PollsController < ApplicationController
     @polls = Poll.all
   end
 
+  # GET /vote/1
+  def vote
+    # params[:answer_id]
+    answer = Answer.where(id: params[:answer_id]).first
+    if(!answer.nil? and !answer.poll.has_been_voted_on_by(current_user))
+      if(Vote.new(answer_id: answer.id, user: current_user).save!)
+        redirect_to answer.poll #action: :show, id: answer.poll
+      end
+    else
+      redirect_to polls_url, notice: 'Invalid Request'
+    end
+  end
+
   # GET /polls/1
   # GET /polls/1.json
   def show
@@ -27,8 +40,7 @@ class PollsController < ApplicationController
   # GET /polls/1/edit
   def edit
     unless(@poll.updatable?)
-      flash[:notice] = 'Poll is not updatable'
-      redirect_to :index
+      redirect_to @poll, notice: 'Poll is not updatable'
     else
       # if they wish to add more answers, build the remaining placeholders
       (Poll::MAX_ANSWERS - @poll.answers.count).times do 

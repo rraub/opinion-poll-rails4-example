@@ -23,13 +23,11 @@ describe PollsController do
   # This should return the minimal set of attributes required to create a valid
   # Poll. As you add validations to Poll, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) { { "poll" => { 
-     "question"=>"adsf", 
+  let(:valid_attributes) { { "poll" => { #todo: generate these from FactoryGirl
+     "question"=>"question1", 
      "answers_attributes"=>{"0"=>{"name"=>"a"}, "1"=>{"name"=>"b"}, "2"=>{"name"=>"c"}, "3"=>{"name"=>""}, "4"=>{"name"=>""}}} } }
    
   let(:poll) { FactoryGirl.build(:poll_with_answers) }
-     
-  #, answers_attributes: [name: :somtghin, name: :somthingelse]
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -51,13 +49,14 @@ describe PollsController do
       get :show, {:id => poll.to_param}, valid_session
       assigns(:poll).should eq(poll)
     end
-    it "renders the voting template if has not been voted on", focus: true do
+
+    it "renders the voting template if has not been voted on" do
       poll.save!
       get :show, {:id => poll.to_param}, valid_session
       response.should render_template("show")
     end
 
-    it "renders the results template if its already been voted on", focus: true do
+    it "renders the results template if its already been voted on" do
       poll.save!
       controller.stub(:current_user).and_return("1234")
       FactoryGirl.create(:vote, :answer => poll.answers.first, :user => "1234")
@@ -103,7 +102,6 @@ describe PollsController do
       end
 
       it "redirects to the created poll" do
-        # post :create, {:poll => valid_attributes}, valid_session
         post :create, valid_attributes, valid_session
         response.should redirect_to(Poll.last)
       end
@@ -130,6 +128,30 @@ describe PollsController do
         # there should always be Poll::MAX_ANSWERS number of answers
         assigns(:poll).answers.to_a.count.should eq(Poll::MAX_ANSWERS)
       end
+    end
+  end
+
+  describe "GET vote" , focus: true do
+    describe "with valid params" do
+      it "redirects to the poll after voting" do 
+        poll.save!
+        get :vote, {answer_id: poll.answers.first.id}, use_route: vote_on_poll_path(answer_id: poll.answers.first.id)
+        response.should redirect_to(poll)
+      end
+    end
+
+    describe "with an invalid answer" do
+      it "redirects to the poll after an unsuccessful vote" do
+        poll.save!
+        get :vote, {answer_id: poll.answers.first.id}, use_route: vote_on_poll_path(answer_id: poll.answers.first.id)
+        response.should redirect_to(poll)
+      end
+
+      it "redirects to the index page with an invalid answer_id" do
+        get :vote, {answer_id: '123232'}, use_route: vote_on_poll_path(answer_id: '123232')
+        response.should redirect_to(polls_url)
+      end
+
     end
   end
 

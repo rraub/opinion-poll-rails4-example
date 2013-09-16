@@ -1,23 +1,12 @@
 
-<table>
-  <thead>
-    <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-
-  <tbody>
     <% @polls.each do |poll| %>
-      <tr>
-        <td><%= link_to poll.question, poll %></td>
-        <td><%= link_to 'Edit', edit_poll_path(poll) %></td>
-        <td><%= link_to 'Destroy', poll, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+
+        <h3>
+          <% if poll.has_been_voted_on_by(current_user) %>&#x2713;<% end %>
+          <%= link_to poll.question, poll %>
+        </h3>
+        
     <% end %>
-  </tbody>
-</table>
 
 <br>
 

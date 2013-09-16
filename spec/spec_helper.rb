@@ -13,6 +13,10 @@ RSpec.configure do |config|
   config.include(EmailSpec::Helpers)
   config.include(EmailSpec::Matchers)
   config.include(FactoryGirl::Syntax::Methods)
+
+  # config.before(:each, :type => :controller) { @routes = YourEngineName::Engine.routes }
+  # config.before(:each, :type => :routing)    { @routes = YourEngineName::Engine.routes }
+
   # ## Mock Framework
   #
   # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:

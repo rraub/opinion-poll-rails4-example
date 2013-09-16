@@ -42,7 +42,7 @@ class Poll < ActiveRecord::Base
   end
 
   def allowed_to_vote?(user)
-  	Vote.joins(:answer).where('answers.poll_id' => self.id, user: user).count == 0
+    !has_been_voted_on_by(user)  	
   end
 
   def updatable?
@@ -54,6 +54,6 @@ class Poll < ActiveRecord::Base
   end
 
   def has_been_voted_on_by(user)
-    !allowed_to_vote?(user)
+    Vote.joins(:answer).where('answers.poll_id' => self.id, user: user).count != 0
   end
 end

@@ -2,6 +2,7 @@ h1. Opinion Poll
 
 Example Application using Rails 4.0.0 for a voting/polling application
 
+"!https://codeclimate.com/github/rraub/opinion-poll-rails4-example.png!":https://codeclimate.com/github/rraub/opinion-poll-rails4-example
 
 This application was generated with the "rails_apps_composer":https://github.com/RailsApps/rails_apps_composer gem provided by the "RailsApps Project":http://railsapps.github.io/.
 
